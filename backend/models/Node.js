@@ -1,19 +1,13 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const nodeSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    name: { type: String, required: true, unique: true },
     type: {
         type: String,
-        enum: ['file', 'module', 'class', 'function'],
-        required: true
+        enum: ['file', 'module', 'class', 'function', 'source', 'header'],
+        required: false
     },
-    description: {
-        type: String
-    },
+    description: String,
 })
 
-module.exports = mongoose.model('Node', nodeSchema)
+export default mongoose.model('Node', nodeSchema)

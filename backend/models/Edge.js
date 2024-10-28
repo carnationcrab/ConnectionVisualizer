@@ -1,22 +1,13 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from 'mongoose'
 
 const edgeSchema = new mongoose.Schema({
-    source: {
-        type: Schema.Types.ObjectId,
-        ref: 'Node',
-        required: true
-    },
-    target: {
-        type: Schema.Types.ObjectId,
-        ref: 'Node',
-        required: true
-    },
+    source: { type: mongoose.Schema.Types.ObjectId, ref: 'Node', required: true },
+    target: { type: mongoose.Schema.Types.ObjectId, ref: 'Node', required: true },
     dependencyType: {
         type: String,
-        enum: ['includes', 'calls', 'inherits', 'references'],
-        required: true
+        enum: ['includes', 'calls', 'inherits', 'references', 'import'],
+        required: true,
     },
 })
 
-module.exports = mongoose.model('Edge', edgeSchema)
+export default mongoose.model('Edge', edgeSchema)

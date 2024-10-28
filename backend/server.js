@@ -1,35 +1,41 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const nodeRoutes = require('./routes/nodes')
-const edgeRoutes = require('./routes/edges')
+import express from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
+
+import nodeRoutes from './routes/nodes.js'
+import edgeRoutes from './routes/edges.js'
+import traverseRepoRoute from './routes/traverseRepo.js'
+
 
 const app = express()
-const PORT = 5000
-
-const protocol = 'mongodb://'
-const localIP = 'localhost'   // points to the local machine, tells mongo db local server
-const mongoPort = '27017'     // default port for mongodb
-const dbName = 'connectionsDB'
+const PORT = process.env.PORT || 5000
+const dbUri = 'mongodb://localhost:27017/connectionsDB'
 
 // MIDDLEWARE
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/nodes', nodeRoutes);
-app.use('/api/edges', edgeRoutes);
+// ROUTES
+app.use('/api/nodes', nodeRoutes)
+app.use('/api/edges', edgeRoutes)
+app.use('/api', traverseRepoRoute)
 
-// DB CONNECT
-mongoose.connect(`${protocol}${localIP}:${mongoPort}/${dbName}`, {
-    //useNewUrlParser: true,
-    //useUnifiedTopology: true,
-}).then(() => {
-    console.log('MongoDB Connected')
-}).catch((error) => {
-    console.error('ERROR: Cannot connect to MongoDB')
-})
+    // DB CONNECT (async/await)
+    // Immediately Invoked Function Expression (IIFE)
+    ; (async () => {
+        try {
+            await mongoose.connect(dbUri, {
+                // useNewUrlParser: true,      // deprecated? not needed?
+                // useUnifiedTopology: true,
+            })
+            console.log('MongoDB Connected')
+        } catch (error) {
+            console.error('ERROR: Cannot connect to MongoDB', error?.message || error)
+            process.exit(1)
+        }
+    })()
 
-// SERVE
+// SERVER START
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`)
+    console.log(`Server running at http://localhost:${PORT}`)
 })
