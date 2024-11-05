@@ -1,6 +1,6 @@
 # Connection Visualizer
 
-A simple visualization of a repo. Not very neat or readable yet!
+A simple visualization of a repo and its import connections.
 
 ![current screenshot](image.png)
 
